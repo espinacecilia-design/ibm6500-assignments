@@ -1,0 +1,178 @@
+---
+title: "M01-2-Introduction to Literate Programming-Application Assignment"
+author: "Cecilia Espina"
+date: '`r format(Sys.time())`'
+format: 
+  html: 
+    toc: true
+    toc-depth: 4
+    number-sections: true
+    code-line-numbers: true
+    code-fold: false
+    code-link: true
+    embed-resources: true
+editor: visual
+execute: 
+  freeze: auto
+  warning: false
+---
+
+## Exercise 1: Creating a Variable
+
+> Create a variable called X and assign the text "This is my first assignment" to it.
+
+::: callout-tip
+Use `<-` to assign a variable to the text.
+:::
+
+```{r}
+X <- "This is my first assignment"
+X # printing to confirm the assignment worked
+```
+
+## Exercise 2: Adding Texts in Base R
+
+> Adding texts in Base R.
+
+### Part 1: Exploring `paste()`
+
+> Look up `paste()` function from help to learn how to use it. In the help document, you will find some use cases as examples toward the bottom of the page. Copy some of them and paste them into your codebook inside a code chunk right below this instruction. Execute one line at a time and learn how they work.
+
+::: callout-tip
+This exercise is to illustrate how you can learn by using the sample codes available from most of the help documents for any functions in R. You may execute each line to see how `paste()` and `paste0()` work differently.
+:::
+
+```{r}
+# Examples adapted from ?paste help documentation
+paste("a", "b", "c") # default separator is a space
+paste0("a", "b", "c") # no separator between elements
+paste("a", "b", "c", sep = "") # same effect as paste0()
+paste(c("a","b"), collapse = "-") # collapses vector into single string
+```
+
+### Part 2: Appending Text to `X`
+
+> Using `paste()` function, add "and I'm loving it!" to `X`, the variable that you just created.
+
+```{r}
+X <- paste(X, "and I'm loving it!")
+X # printing to confirm the concatenation worked
+```
+
+## Exercise 3: Creating and Modifying a Vector
+
+> Create a vector called Y with the numbers 2, 3, 4, and 5. Next, multiply the vector by 2 and save it as Y again.
+
+```{r}
+Y <- c(2, 3, 4, 5)
+Y <- Y * 2
+Y # printing to confirm the vector was updated
+```
+
+## Exercise 4: Printing X and Y
+
+> Print both the variable (X) and the vector (Y).
+
+```{r}
+X
+Y
+```
+
+## Exercise 5: Max and Min of Y
+
+> Show the maximum and the minimum value of the vector Y that you created.
+
+```{r}
+max(Y)
+min(Y)
+```
+
+## Exercise 6: Loading `ggplot2` and Exploring `economics`
+
+> Load up the `ggplot2` package and take a look at the first six rows of the data called, "economics," which is available with the package.
+
+::: callout-tip
+For this task, just type the three lines below inside a code chunk.
+:::
+
+```{r}
+# install.packages("ggplot2") # commented out since already installed
+library(ggplot2)
+head(economics)
+```
+
+## Exercise 7: Exploring and Visualizing `economics`
+
+> Use the data set "economics," which is from `ggplot2` package. First understand the data by referring to help document. Since there are only six variables, provide the definition of the variables nicely in bullets to aid readers who will not have access to the help document. Pick two variables that you think are somehow related. Then draw a chart using `ggplot2` package. Assign "plot" to the basic layers of data, aesthetics, and geometry, which are the minimum elements to generate a chart according to the grammar of graphics. Further, using the function `labs()`, add the title and labels for the x-axis and y-axis.
+
+The `economics` dataset contains the following variables:
+
+- **date**: month of data collection
+- **pce**: personal consumption expenditures, in billions of dollars
+- **pop**: total population, in thousands
+- **psavert**: personal savings rate
+- **uempmed**: median duration of unemployment, in weeks
+- **unemploy**: number of unemployed, in thousands
+
+I chose to compare **uempmed** (median duration of unemployment) and **unemploy** (number of unemployed), since a longer average duration of unemployment could plausibly relate to a larger pool of unemployed people.
+
+::: callout-note
+All variables in this dataset are continuous, which is why a scatter plot (`geom_point`) is an appropriate choice here.
+:::
+
+```{r}
+plot <- ggplot(data = economics, aes(x = uempmed, y = unemploy)) +
+  geom_point()
+
+plot +
+  labs(title = "Unemployment Duration vs. Number Unemployed",
+       x = "Median Duration of Unemployment (weeks)",
+       y = "Number Unemployed (thousands)")
+```
+
+## Exercise 8: Replicating the Chart with a Pipe Operator
+
+> This time, replicate the chart above using a pipe operator and without saving the initial plot as a plot object. In other words, use one long chain of code from the data at the top of the lines to the last addition to the chart. Now, add a label and caption to the figure so that the figure to be created can be cross-referenced. Also, make the width of the figure 5 with an aspect ratio of 0.6.
+
+::: callout-tip
+Once you replicate the chart, you can use `#|` inside the code chunk to control the label, caption, and size of the figure.
+:::
+
+```{r}
+#| label: fig-unemployment
+#| fig-cap: "Relationship between unemployment duration and number of people unemployed."
+#| fig-width: 5
+#| fig-asp: 0.6
+
+economics |>
+  ggplot(aes(x = uempmed, y = unemploy)) +
+  geom_point() +
+  labs(title = "Unemployment Duration vs. Number Unemployed",
+       x = "Median Duration of Unemployment (weeks)",
+       y = "Number Unemployed (thousands)")
+```
+
+## Exercise 9: Discussing the Findings
+
+> Using one of the callout blocks, describe your findings. In doing so, use cross-referencing to refer to the figure you created earlier.
+
+::: callout-important
+As shown in @fig-unemployment, \[There appears to be a positive relationship between median unemployment duration and the total number of unemployed people, suggesting that periods with more widespread unemployment also tend to see people staying unemployed longer.\]
+:::
+
+## Exercise 10: Report Organization Summary
+
+> Make sure your codebook is well organized, easy to navigate, and beautiful. Implement as many tools as you learned in Step 1 to make your report reproducible and effective throughout the report. Then, explicitly state under this question what you did. You don't need to mention multiple actions for the same function. Summarize the different functions you implemented using a numbered list. You must use at least 10 different kinds of tools listed below.
+
+To make this report organized and reproducible, I implemented the following tools:
+
+1.  Section numbering with `#`, `##`, and `###` for headings and sub-headings
+2.  **Bold font** to highlight key terms (e.g., variable names in Exercise 7)
+3.  *Italicized font* for emphasis
+4.  `callout-tip` blocks for all hints provided in the instructions
+5.  `callout-note` for additional context (Exercise 7)
+6.  `callout-important` for the findings discussion (Exercise 9)
+7.  `blockquote` (`>`) to consistently set apart each task/question from my own writing
+8.  Backticks (`` ` ``) around function names and variable names to set them apart from regular text
+9.  Cross-referencing (`@fig-unemployment`) to refer back to the figure created in Exercise 8
+10. The `#|` optional chunk options (`label`, `fig-cap`, `fig-width`, `fig-asp`) to control figure output in Exercise 8
